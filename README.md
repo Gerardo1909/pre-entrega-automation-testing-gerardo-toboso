@@ -31,6 +31,7 @@ exclusivamente para llevar a cabos pruebas de esta índole.
 pre-entrega-automation-testing-gerardo_toboso/
 ├── src/
 │   ├── tests/          # Casos de prueba automatizados
+│   ├── reports/        # Reportes generador a partir de las pruebas realizadas
 │   └── utils/          # Utilidades y funciones auxiliares
 ├── .gitignore          # .git para ignorar archivos innecesarios
 ├── .python-version     # Especifica la versión de Python con la que se trabaja
@@ -68,7 +69,13 @@ source .venv/bin/activate  # En Mac/Linux
    pip install -r requirements.txt
    ```
 
+4. Descarga el WebDriver de Google Chrome [en este link](https://googlechromelabs.github.io/chrome-for-testing/) verificando que la versión coincida con la que está actualmente en tu navegador.
+
+> Asegúrate de que el WebDriver esté en tu PATH o especifica su ubicación en el código (puedes ayudarte con [esta consulta en StackOverflow](https://stackoverflow.com/questions/40555930/selenium-chromedriver-executable-needs-to-be-in-path)).
+
 ## Comandos para ejecutar las pruebas
+
+> Asegúrate de tener activado el entorno virtual que creaste anteriormente
 
 * **Ejecutar todas las pruebas**:
 
@@ -79,7 +86,7 @@ source .venv/bin/activate  # En Mac/Linux
 * **Ejecutar pruebas con reporte HTML**:
 
   ```bash
-  pytest src/tests/ --html=reports/report.html --self-contained-html
+  pytest src/tests/ --html=src/reports/report.html --self-contained-html
   ```
 
 * **Ejecutar pruebas en modo verbose**:
