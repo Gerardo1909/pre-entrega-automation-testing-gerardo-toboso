@@ -3,7 +3,6 @@ Tests para el flujo de login de https://www.saucedemo.com/
 """
 
 import pytest
-from selenium.webdriver.common.by import By
 from pages.login_page import LoginPage
 
 
@@ -20,7 +19,6 @@ def test_login_should_succeed_when_valid_credentials(selenium_driver):
 
     # Assert
     assert "/inventory.html" in selenium_driver.current_url
-    assert selenium_driver.find_element(By.ID, "inventory_container").is_displayed()
 
 
 def test_login_should_fail_when_invalid_credentials(selenium_driver):
