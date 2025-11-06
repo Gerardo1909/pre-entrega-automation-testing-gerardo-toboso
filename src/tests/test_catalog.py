@@ -6,6 +6,7 @@ import pytest
 from pages.catalog_page import CatalogPage
 
 
+@pytest.mark.smoke
 def test_catalog_should_display_correct_title_when_user_is_logged_in(selenium_driver):
     """
     Prueba que verifica que el título del catálogo sea correcto para un usuario logueado.
@@ -20,6 +21,7 @@ def test_catalog_should_display_correct_title_when_user_is_logged_in(selenium_dr
     assert title == "Products"
 
 
+@pytest.mark.smoke
 def test_catalog_should_display_products_when_user_is_logged_in(selenium_driver):
     """
     Prueba que verifica que el catálogo muestre productos al usuario logueado.

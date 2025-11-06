@@ -6,6 +6,7 @@ import pytest
 from pages.catalog_page import CatalogPage
 
 
+@pytest.mark.smoke
 def test_product_should_be_added_to_cart_when_add_to_cart_button_is_clicked(
     selenium_driver,
 ):
@@ -41,6 +42,7 @@ def test_multiple_products_should_be_added_to_cart_when_add_to_cart_buttons_are_
     assert item_count == 6
 
 
+@pytest.mark.smoke
 def test_cart_should_display_selected_product_when_cart_icon_is_clicked(
     selenium_driver,
 ):
@@ -87,6 +89,7 @@ def test_cart_should_display_multiple_products_when_multiple_add_to_cart_buttons
     assert "Test.allTheThings() T-Shirt (Red)" in item_names
 
 
+@pytest.mark.smoke
 def test_cart_should_remove_product_when_remove_button_is_clicked(selenium_driver):
     """
     Prueba que verifica que un producto se elimine del carrito al hacer clic en el botón "Remove".

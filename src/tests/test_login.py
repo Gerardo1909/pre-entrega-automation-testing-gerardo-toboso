@@ -6,6 +6,7 @@ import pytest
 from pages.login_page import LoginPage
 
 
+@pytest.mark.smoke
 def test_login_should_succeed_when_valid_credentials(selenium_driver):
     """
     Prueba que verifica el inicio de sesión con credenciales válidas.
