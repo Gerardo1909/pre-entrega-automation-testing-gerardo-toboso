@@ -5,14 +5,13 @@ Configuración de fixtures para pruebas con pytest y Selenium.
 import pytest
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
-from selenium.webdriver.common.by import By
 from utils.screenshot_saver import take_screenshot
 from datetime import datetime
 import os
 
 
-@pytest.fixture(name="selenium_driver")
-def _selenium_driver():
+@pytest.fixture(name="selenium_driver", scope="function")
+def selenium_driver():
     """
     Fixture para inicializar el driver de Selenium.
     """
@@ -23,18 +22,6 @@ def _selenium_driver():
     driver.implicitly_wait(10)
     yield driver
     driver.quit()
-
-
-@pytest.fixture()
-def loged_in_driver(selenium_driver):
-    """
-    Fixture para un driver de Selenium ya logueado en la aplicación.
-    """
-    selenium_driver.get("https://www.saucedemo.com")
-    selenium_driver.find_element(By.ID, "user-name").send_keys("standard_user")
-    selenium_driver.find_element(By.ID, "password").send_keys("secret_sauce")
-    selenium_driver.find_element(By.ID, "login-button").click()
-    yield selenium_driver
 
 
 @pytest.hookimpl(tryfirst=True, hookwrapper=True)
@@ -49,11 +36,7 @@ def pytest_runtest_makereport(item):
     # Verificamos si estamos en la fase de call y si ha fallado el test
     if rep.when == "call" and rep.failed:
         # Buscar un objeto driver en los fixtures usados por el test
-        possible_keys = [
-            "driver",
-            "selenium_driver",
-            "loged_in_driver"
-        ]
+        possible_keys = ["driver", "selenium_driver", "loged_in_driver"]
         driver = None
         for key in possible_keys:
             driver = item.funcargs.get(key)
@@ -62,7 +45,7 @@ def pytest_runtest_makereport(item):
 
         if driver:
             timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-            # usamos ruta absoluta para evitar problemas de compatibilidad con otras 
+            # usamos ruta absoluta para evitar problemas de compatibilidad con otras
             # terminales
             base_dir = os.path.abspath(
                 os.path.join(os.path.dirname(__file__), "..", "screenshots")
