@@ -32,16 +32,20 @@ class LoginPage:
         """
         Ingresa el nombre de usuario en el campo correspondiente.
         """
-        self.wait.until(
+        element = self.wait.until(
             EC.visibility_of_element_located(self._USER_INPUT)
-        ).clear().send_keys(username)
+        )
+        element.clear()
+        element.send_keys(username)
         return self
 
     def enter_password(self, password: str):
         """
         Ingresa la contraseña en el campo correspondiente.
         """
-        self.driver.find_element(*self._PASSWORD_INPUT).clear().send_keys(password)
+        element = self.driver.find_element(*self._PASSWORD_INPUT)
+        element.clear()
+        element.send_keys(password)
         return self
 
     def click_login(self):
@@ -64,7 +68,7 @@ class LoginPage:
         try:
             self.wait.until(EC.visibility_of_element_located(self._ERROR_MESSAGE))
             return True
-        except:
+        except Exception:
             return False
 
     def get_error_message(self) -> str:
