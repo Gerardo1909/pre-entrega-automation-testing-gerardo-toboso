@@ -3,121 +3,105 @@ Tests para el flujo de uso del carrito de compras en https://www.saucedemo.com/
 """
 
 import pytest
-from selenium.webdriver.common.by import By
+from pages.catalog_page import CatalogPage
 
 
+@pytest.mark.smoke
 def test_product_should_be_added_to_cart_when_add_to_cart_button_is_clicked(
-    loged_in_driver,
+    selenium_driver,
 ):
     """
     Prueba que verifica que un producto se agregue al carrito al hacer clic en el botón "Add to cart".
     """
     # Arrange
-    loged_in_driver.get("https://www.saucedemo.com/inventory.html")
+    catalog_page = CatalogPage(selenium_driver)
 
     # Act
-    loged_in_driver.find_element(By.ID, "add-to-cart-sauce-labs-backpack").click()
-    cart_badge = loged_in_driver.find_element(By.CLASS_NAME, "shopping_cart_badge")
+    catalog_page.add_product_to_cart_by_index(0)
+    item_count = catalog_page.get_cart_item_count()
 
     # Assert
-    assert cart_badge.is_displayed()
-    assert cart_badge.text == "1"
+    assert item_count == 1
 
 
 def test_multiple_products_should_be_added_to_cart_when_add_to_cart_buttons_are_clicked(
-    loged_in_driver,
+    selenium_driver,
 ):
     """
     Prueba que verifica que múltiples productos se agreguen al carrito al hacer clic en varios botones "Add to cart".
     """
     # Arrange
-    loged_in_driver.get("https://www.saucedemo.com/inventory.html")
+    catalog_page = CatalogPage(selenium_driver)
 
     # Act
-    loged_in_driver.find_element(By.ID, "add-to-cart-sauce-labs-backpack").click()
-    loged_in_driver.find_element(By.ID, "add-to-cart-sauce-labs-bike-light").click()
-    loged_in_driver.find_element(By.ID, "add-to-cart-sauce-labs-bolt-t-shirt").click()
-    loged_in_driver.find_element(By.ID, "add-to-cart-sauce-labs-fleece-jacket").click()
-    loged_in_driver.find_element(By.ID, "add-to-cart-sauce-labs-onesie").click()
-    loged_in_driver.find_element(
-        By.ID, "add-to-cart-test.allthethings()-t-shirt-(red)"
-    ).click()
-    cart_badge = loged_in_driver.find_element(By.CLASS_NAME, "shopping_cart_badge")
+    for i in range(6):
+        catalog_page.add_product_to_cart_by_index(0)
+    item_count = catalog_page.get_cart_item_count()
 
     # Assert
-    assert cart_badge.is_displayed()
-    assert cart_badge.text == "6"
+    assert item_count == 6
 
 
+@pytest.mark.smoke
 def test_cart_should_display_selected_product_when_cart_icon_is_clicked(
-    loged_in_driver,
+    selenium_driver,
 ):
     """
     Prueba que verifica que el carrito muestre el producto seleccionado al hacer clic en el ícono del carrito.
     """
     # Arrange
-    loged_in_driver.get("https://www.saucedemo.com/inventory.html")
-    loged_in_driver.find_element(By.ID, "add-to-cart-sauce-labs-backpack").click()
+    catalog_page = CatalogPage(selenium_driver)
+    catalog_page.add_product_to_cart_by_index(0)
 
     # Act
-    loged_in_driver.find_element(By.CLASS_NAME, "shopping_cart_link").click()
-    cart_items = loged_in_driver.find_elements(By.CLASS_NAME, "cart_item")
+    page = catalog_page.go_to_cart()
+    cart_items = page.get_cart_items()
+    item_names = page.get_item_names()
 
     # Assert
     assert len(cart_items) == 1
-    assert (
-        cart_items[0].find_element(By.CLASS_NAME, "inventory_item_name").text
-        == "Sauce Labs Backpack"
-    )
+    assert item_names[0] == "Sauce Labs Backpack"
 
 
 def test_cart_should_display_multiple_products_when_multiple_add_to_cart_buttons_are_clicked(
-    loged_in_driver,
+    selenium_driver,
 ):
     """
     Prueba que verifica que el carrito muestre múltiples productos seleccionados al hacer clic en varios botones "Add to cart".
     """
     # Arrange
-    loged_in_driver.get("https://www.saucedemo.com/inventory.html")
-    loged_in_driver.find_element(By.ID, "add-to-cart-sauce-labs-backpack").click()
-    loged_in_driver.find_element(By.ID, "add-to-cart-sauce-labs-bike-light").click()
-    loged_in_driver.find_element(By.ID, "add-to-cart-sauce-labs-bolt-t-shirt").click()
-    loged_in_driver.find_element(By.ID, "add-to-cart-sauce-labs-fleece-jacket").click()
-    loged_in_driver.find_element(By.ID, "add-to-cart-sauce-labs-onesie").click()
-    loged_in_driver.find_element(
-        By.ID, "add-to-cart-test.allthethings()-t-shirt-(red)"
-    ).click()
+    catalog_page = CatalogPage(selenium_driver)
+    for i in range(6):
+        catalog_page.add_product_to_cart_by_index(0)
 
     # Act
-    loged_in_driver.find_element(By.CLASS_NAME, "shopping_cart_link").click()
-    cart_items = loged_in_driver.find_elements(By.CLASS_NAME, "cart_item")
+    page = catalog_page.go_to_cart()
+    cart_items = page.get_cart_items()
+    item_names = page.get_item_names()
 
     # Assert
     assert len(cart_items) == 6
-    product_names = [
-        item.find_element(By.CLASS_NAME, "inventory_item_name").text
-        for item in cart_items
-    ]
-    assert "Sauce Labs Backpack" in product_names
-    assert "Sauce Labs Bike Light" in product_names
-    assert "Sauce Labs Bolt T-Shirt" in product_names
-    assert "Sauce Labs Fleece Jacket" in product_names
-    assert "Sauce Labs Onesie" in product_names
-    assert "Test.allTheThings() T-Shirt (Red)" in product_names
+    assert "Sauce Labs Backpack" in item_names
+    assert "Sauce Labs Bike Light" in item_names
+    assert "Sauce Labs Bolt T-Shirt" in item_names
+    assert "Sauce Labs Fleece Jacket" in item_names
+    assert "Sauce Labs Onesie" in item_names
+    assert "Test.allTheThings() T-Shirt (Red)" in item_names
 
 
-def test_cart_should_remove_product_when_remove_button_is_clicked(loged_in_driver):
+@pytest.mark.smoke
+def test_cart_should_remove_product_when_remove_button_is_clicked(selenium_driver):
     """
     Prueba que verifica que un producto se elimine del carrito al hacer clic en el botón "Remove".
     """
     # Arrange
-    loged_in_driver.get("https://www.saucedemo.com/inventory.html")
-    loged_in_driver.find_element(By.ID, "add-to-cart-sauce-labs-backpack").click()
-    loged_in_driver.find_element(By.CLASS_NAME, "shopping_cart_link").click()
+    catalog_page = CatalogPage(selenium_driver)
+    catalog_page.add_product_to_cart_by_index(0)
+    page = catalog_page.go_to_cart()
 
     # Act
-    loged_in_driver.find_element(By.ID, "remove-sauce-labs-backpack").click()
-    cart_items = loged_in_driver.find_elements(By.CLASS_NAME, "cart_item")
+    page.click_remove_button_by_index(0)
+    cart_items = page.get_cart_items()
 
     # Assert
     assert len(cart_items) == 0
