@@ -15,6 +15,7 @@ class CatalogPage:
 
     _TITLE = (By.CLASS_NAME, "title")
     _PRODUCTS = (By.CLASS_NAME, "inventory_item")
+    _ITEM_NAMES = (By.CLASS_NAME, "inventory_item_name")
     _ADD_BUTTONS = (By.CSS_SELECTOR, "button[data-test*='add-to-cart']")
     _CART_BADGE = (By.CLASS_NAME, "shopping_cart_badge")
     _CART_LINK = (By.CLASS_NAME, "shopping_cart_link")
@@ -56,6 +57,17 @@ class CatalogPage:
         else:
             raise IndexError("Índice de producto fuera de rango.")
         return self
+    
+    def add_product_to_cart_by_name(self, name: str):
+        """
+        Agrega un producto al carrito por su nombre.
+        """
+        products = self.get_products()
+        for product in products:
+            if product.find_element(*self._ITEM_NAMES).text == name:
+                product.find_element(*self._ADD_BUTTONS).click()
+                return self
+        raise ValueError(f"Producto no encontrado: {name}")
 
     def get_cart_item_count(self) -> int:
         """
