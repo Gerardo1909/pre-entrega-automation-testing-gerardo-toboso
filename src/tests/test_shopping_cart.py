@@ -2,8 +2,18 @@
 Tests para el flujo de uso del carrito de compras en https://www.saucedemo.com/
 """
 
+from pathlib import Path
+
 import pytest
+
 from pages.catalog_page import CatalogPage
+from utils.json_reader import JSONReader
+
+# Cargar nombres de productos desde el archivo JSON
+PRODUCTOS_JSON_PATH = Path(__file__).parent.parent / "data" / "productos.json"
+json_reader = JSONReader(str(PRODUCTOS_JSON_PATH))
+NOMBRES_PRODUCTOS = json_reader.read_field_as_tuples("nombre")
+PRODUCTOS_COMPLETOS = json_reader.read_as_dicts()
 
 
 @pytest.mark.smoke
@@ -32,61 +42,60 @@ def test_multiple_products_should_be_added_to_cart_when_add_to_cart_buttons_are_
     """
     # Arrange
     catalog_page = CatalogPage(selenium_driver)
+    expected_count = 6
 
     # Act
-    for i in range(6):
+    for i in range(expected_count):
         catalog_page.add_product_to_cart_by_index(0)
     item_count = catalog_page.get_cart_item_count()
 
     # Assert
-    assert item_count == 6
+    assert item_count == expected_count
 
 
-@pytest.mark.smoke
-def test_cart_should_display_selected_product_when_cart_icon_is_clicked(
-    selenium_driver,
+@pytest.mark.parametrize("nombre_producto", NOMBRES_PRODUCTOS)
+def test_cart_should_display_product_when_added_and_cart_icon_clicked(
+    selenium_driver, nombre_producto
 ):
     """
-    Prueba que verifica que el carrito muestre el producto seleccionado al hacer clic en el ícono del carrito.
+    Test parametrizado que verifica que el carrito muestre el producto correcto
+    cuando se agrega y se accede al carrito.
     """
     # Arrange
     catalog_page = CatalogPage(selenium_driver)
-    catalog_page.add_product_to_cart_by_index(0)
+    catalog_page.add_product_to_cart_by_name(nombre_producto)
 
     # Act
-    page = catalog_page.go_to_cart()
-    cart_items = page.get_cart_items()
-    item_names = page.get_item_names()
+    cart_page = catalog_page.go_to_cart()
+    cart_items = cart_page.get_cart_items()
+    item_names = cart_page.get_item_names()
 
     # Assert
     assert len(cart_items) == 1
-    assert item_names[0] == "Sauce Labs Backpack"
+    assert nombre_producto in item_names
 
 
-def test_cart_should_display_multiple_products_when_multiple_add_to_cart_buttons_are_clicked(
-    selenium_driver,
+@pytest.mark.parametrize("nombre_producto", NOMBRES_PRODUCTOS)
+def test_cart_should_display_all_products_when_multiple_products_added(
+    selenium_driver, nombre_producto, productos_agregados=PRODUCTOS_COMPLETOS
 ):
     """
-    Prueba que verifica que el carrito muestre múltiples productos seleccionados al hacer clic en varios botones "Add to cart".
+    Prueba que verifica que el carrito muestre todos los productos cuando se agregan múltiples productos.
     """
     # Arrange
     catalog_page = CatalogPage(selenium_driver)
-    for i in range(6):
-        catalog_page.add_product_to_cart_by_index(0)
 
     # Act
-    page = catalog_page.go_to_cart()
-    cart_items = page.get_cart_items()
-    item_names = page.get_item_names()
+    for producto in productos_agregados:
+        catalog_page.add_product_to_cart_by_name(producto["nombre"])
+
+    cart_page = catalog_page.go_to_cart()
+    cart_items = cart_page.get_cart_items()
+    item_names = cart_page.get_item_names()
 
     # Assert
-    assert len(cart_items) == 6
-    assert "Sauce Labs Backpack" in item_names
-    assert "Sauce Labs Bike Light" in item_names
-    assert "Sauce Labs Bolt T-Shirt" in item_names
-    assert "Sauce Labs Fleece Jacket" in item_names
-    assert "Sauce Labs Onesie" in item_names
-    assert "Test.allTheThings() T-Shirt (Red)" in item_names
+    assert len(cart_items) == len(productos_agregados)
+    assert nombre_producto in item_names
 
 
 @pytest.mark.smoke
