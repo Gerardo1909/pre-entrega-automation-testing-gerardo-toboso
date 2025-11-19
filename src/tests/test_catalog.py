@@ -3,6 +3,7 @@ Tests para el flujo de uso de catalogo en https://www.saucedemo.com/
 """
 
 import pytest
+import pytest_check as check
 from pages.catalog_page import CatalogPage
 from utils.logger import logger
 
@@ -13,14 +14,19 @@ def test_catalog_should_display_correct_title_when_user_is_logged_in(selenium_dr
     """
     Prueba que verifica que el título del catálogo sea correcto para un usuario logueado.
     """
+    logger.info("Iniciando test_catalog_should_display_correct_title_when_user_is_logged_in")
+    
     # Arrange
     page = CatalogPage(selenium_driver)
+    logger.debug(f"Pagina cargada en: {selenium_driver.current_url}")
 
     # Act
     title = page.get_title()
+    logger.info(f"Titulo obtenido: {title}")
 
     # Assert
-    assert title == "Products"
+    check.equal(title, "Products", "El titulo del catalogo no es el esperado")
+    logger.info("Test completado exitosamente")
 
 
 @pytest.mark.smoke
@@ -39,7 +45,7 @@ def test_catalog_should_display_products_when_user_is_logged_in(selenium_driver)
     logger.info(f"Productos encontrados: {len(products)}")
 
     # Assert
-    assert len(products) > 0
+    check.greater(len(products), 0, "No se encontraron productos en el catalogo")
     logger.info("Test completado exitosamente")
 
 
@@ -60,7 +66,7 @@ def test_catalog_should_display_menu_when_menu_button_is_clicked(selenium_driver
     page.click_menu_button()
 
     # Assert
-    assert page.menu_is_displayed()
+    check.is_true(page.menu_is_displayed(), "El menu no se despliega correctamente")
     logger.info("Test completado exitosamente")
 
 
@@ -82,7 +88,7 @@ def test_catalog_should_display_filters_when_filter_button_is_clicked(selenium_d
     logger.info(f"Filtros encontrados: {len(filters)}")
 
     # Assert
-    assert len(filters) > 0
+    check.greater(len(filters), 0, "No se encontraron opciones de filtro")
     logger.info("Test completado exitosamente")
 
 
@@ -103,5 +109,5 @@ def test_catalog_should_display_cart_icon_when_user_is_logged_in(selenium_driver
     logger.info(f"Icono del carrito visible: {is_cart_displayed}")
 
     # Assert
-    assert is_cart_displayed
+    check.is_true(is_cart_displayed, "El icono del carrito no esta visible")
     logger.info("Test completado exitosamente")
