@@ -13,6 +13,7 @@ LOGIN_CSV_PATH = Path(__file__).parent.parent / "data" / "login.csv"
 CASOS_LOGIN = CSVReader(str(LOGIN_CSV_PATH)).read()
 
 
+@pytest.mark.ui
 @pytest.mark.parametrize("usuario, clave, debe_funcionar, descripcion", CASOS_LOGIN)
 def test_login_should_work_when_credentials_provided(
     selenium_driver, usuario, clave, debe_funcionar, descripcion
@@ -39,6 +40,7 @@ def test_login_should_work_when_credentials_provided(
 
 
 @pytest.mark.smoke
+@pytest.mark.ui
 def test_login_should_succeed_when_valid_credentials(selenium_driver):
     """
     Prueba que verifica el inicio de sesión con credenciales válidas.

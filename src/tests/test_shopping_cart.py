@@ -17,6 +17,7 @@ PRODUCTOS_COMPLETOS = json_reader.read_as_dicts()
 
 
 @pytest.mark.smoke
+@pytest.mark.ui
 def test_product_should_be_added_to_cart_when_add_to_cart_button_is_clicked(
     selenium_driver,
 ):
@@ -34,6 +35,7 @@ def test_product_should_be_added_to_cart_when_add_to_cart_button_is_clicked(
     assert item_count == 1
 
 
+@pytest.mark.ui
 def test_multiple_products_should_be_added_to_cart_when_add_to_cart_buttons_are_clicked(
     selenium_driver,
 ):
@@ -53,6 +55,7 @@ def test_multiple_products_should_be_added_to_cart_when_add_to_cart_buttons_are_
     assert item_count == expected_count
 
 
+@pytest.mark.ui
 @pytest.mark.parametrize("nombre_producto", NOMBRES_PRODUCTOS)
 def test_cart_should_display_product_when_added_and_cart_icon_clicked(
     selenium_driver, nombre_producto
@@ -75,6 +78,7 @@ def test_cart_should_display_product_when_added_and_cart_icon_clicked(
     assert nombre_producto in item_names
 
 
+@pytest.mark.ui
 @pytest.mark.parametrize("nombre_producto", NOMBRES_PRODUCTOS)
 def test_cart_should_display_all_products_when_multiple_products_added(
     selenium_driver, nombre_producto, productos_agregados=PRODUCTOS_COMPLETOS
@@ -99,6 +103,7 @@ def test_cart_should_display_all_products_when_multiple_products_added(
 
 
 @pytest.mark.smoke
+@pytest.mark.ui
 def test_cart_should_remove_product_when_remove_button_is_clicked(selenium_driver):
     """
     Prueba que verifica que un producto se elimine del carrito al hacer clic en el botón "Remove".

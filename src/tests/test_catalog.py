@@ -7,6 +7,7 @@ from pages.catalog_page import CatalogPage
 
 
 @pytest.mark.smoke
+@pytest.mark.ui
 def test_catalog_should_display_correct_title_when_user_is_logged_in(selenium_driver):
     """
     Prueba que verifica que el título del catálogo sea correcto para un usuario logueado.
@@ -22,6 +23,7 @@ def test_catalog_should_display_correct_title_when_user_is_logged_in(selenium_dr
 
 
 @pytest.mark.smoke
+@pytest.mark.ui
 def test_catalog_should_display_products_when_user_is_logged_in(selenium_driver):
     """
     Prueba que verifica que el catálogo muestre productos al usuario logueado.
@@ -36,6 +38,7 @@ def test_catalog_should_display_products_when_user_is_logged_in(selenium_driver)
     assert len(products) > 0
 
 
+@pytest.mark.ui
 def test_catalog_should_display_menu_when_menu_button_is_clicked(selenium_driver):
     """
     Prueba que verifica que el menú se despliegue al hacer clic en el botón de menú.
@@ -50,6 +53,7 @@ def test_catalog_should_display_menu_when_menu_button_is_clicked(selenium_driver
     assert page.menu_is_displayed()
 
 
+@pytest.mark.ui
 def test_catalog_should_display_filters_when_filter_button_is_clicked(selenium_driver):
     """
     Prueba que verifica que las opciones de filtro se desplieguen al hacer clic en el botón de filtro.
@@ -65,6 +69,7 @@ def test_catalog_should_display_filters_when_filter_button_is_clicked(selenium_d
     assert len(filters) > 0
 
 
+@pytest.mark.ui
 def test_catalog_should_display_cart_icon_when_user_is_logged_in(selenium_driver):
     """
     Prueba que verifica que el ícono del carrito de compras se muestre para un usuario logueado.
