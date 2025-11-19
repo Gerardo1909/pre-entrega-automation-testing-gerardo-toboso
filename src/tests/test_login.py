@@ -5,6 +5,7 @@ Tests para el flujo de login de https://www.saucedemo.com/
 from pathlib import Path
 
 import pytest
+import pytest_check as check
 
 from pages.login_page import LoginPage
 from utils.csv_reader import CSVReader
@@ -38,13 +39,13 @@ def test_login_should_work_when_credentials_provided(
     # Assert
     if debe_funcionar:
         logger.info("Verificando redireccion exitosa")
-        assert "/inventory.html" in selenium_driver.current_url, (
+        check.is_in("/inventory.html", selenium_driver.current_url, 
             f"Login fallo para {descripcion}. URL actual: {selenium_driver.current_url}"
         )
         logger.info(f"Test completado exitosamente - {descripcion}")
     else:
         logger.info("Verificando que se muestre error")
-        assert page.error_is_displayed(), (
+        check.is_true(page.error_is_displayed(), 
             f"Se esperaba error para {descripcion}, pero no se mostro"
         )
         logger.info(f"Error de login detectado correctamente - {descripcion}")
@@ -69,5 +70,7 @@ def test_login_should_succeed_when_valid_credentials(selenium_driver):
     logger.info("Verificando redireccion exitosa")
 
     # Assert
-    assert "/inventory.html" in selenium_driver.current_url
+    check.is_in("/inventory.html", selenium_driver.current_url, 
+        "La redireccion al inventario fallo"
+    )
     logger.info("Test completado exitosamente")
