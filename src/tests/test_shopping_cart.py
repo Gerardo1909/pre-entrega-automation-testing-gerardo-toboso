@@ -5,6 +5,7 @@ Tests para el flujo de uso del carrito de compras en https://www.saucedemo.com/
 from pathlib import Path
 
 import pytest
+import pytest_check as check
 
 from pages.catalog_page import CatalogPage
 from utils.json_reader import JSONReader
@@ -29,11 +30,14 @@ def test_product_should_be_added_to_cart_when_add_to_cart_button_is_clicked(
     catalog_page = CatalogPage(selenium_driver)
 
     # Act
+    logger.info("Iniciando test_product_should_be_added_to_cart_when_add_to_cart_button_is_clicked")
     catalog_page.add_product_to_cart_by_index(0)
     item_count = catalog_page.get_cart_item_count()
+    logger.info(f"Cantidad de productos en carrito: {item_count}")
 
     # Assert
-    assert item_count == 1
+    check.equal(item_count, 1, "El producto no se agrego correctamente al carrito")
+    logger.info("Test completado exitosamente")
 
 
 @pytest.mark.ui
@@ -59,7 +63,9 @@ def test_multiple_products_should_be_added_to_cart_when_add_to_cart_buttons_are_
     logger.info(f"Productos agregados: {item_count}")
 
     # Assert
-    assert item_count == expected_count
+    check.equal(item_count, expected_count, 
+        f"Se esperaban {expected_count} productos pero se encontraron {item_count}"
+    )
     logger.info("Test completado exitosamente")
 
 
@@ -88,8 +94,10 @@ def test_cart_should_display_product_when_added_and_cart_icon_clicked(
     logger.info(f"Productos en carrito: {item_names}")
 
     # Assert
-    assert len(cart_items) == 1
-    assert nombre_producto in item_names
+    check.equal(len(cart_items), 1, "El carrito no contiene exactamente 1 producto")
+    check.is_in(nombre_producto, item_names, 
+        f"El producto {nombre_producto} no esta en el carrito"
+    )
     logger.info(f"Test completado exitosamente - {nombre_producto}")
 
 
@@ -113,8 +121,12 @@ def test_cart_should_display_all_products_when_multiple_products_added(
     item_names = cart_page.get_item_names()
 
     # Assert
-    assert len(cart_items) == len(productos_agregados)
-    assert nombre_producto in item_names
+    check.equal(len(cart_items), len(productos_agregados), 
+        f"Se esperaban {len(productos_agregados)} productos pero se encontraron {len(cart_items)}"
+    )
+    check.is_in(nombre_producto, item_names, 
+        f"El producto {nombre_producto} no esta en el carrito"
+    )
 
 
 @pytest.mark.smoke
@@ -140,5 +152,5 @@ def test_cart_should_remove_product_when_remove_button_is_clicked(selenium_drive
     cart_items = page.get_cart_items()
 
     # Assert
-    assert len(cart_items) == 0
+    check.equal(len(cart_items), 0, "El carrito no esta vacio despues de remover el producto")
     logger.info("Test completado exitosamente")
