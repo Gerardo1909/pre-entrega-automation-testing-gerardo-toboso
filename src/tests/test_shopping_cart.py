@@ -8,6 +8,7 @@ import pytest
 
 from pages.catalog_page import CatalogPage
 from utils.json_reader import JSONReader
+from utils.logger import logger
 
 # Cargar nombres de productos desde el archivo JSON
 PRODUCTOS_JSON_PATH = Path(__file__).parent.parent / "data" / "productos.json"
@@ -42,17 +43,24 @@ def test_multiple_products_should_be_added_to_cart_when_add_to_cart_buttons_are_
     """
     Prueba que verifica que múltiples productos se agreguen al carrito al hacer clic en varios botones "Add to cart".
     """
+    logger.info(
+        "Iniciando test_multiple_products_should_be_added_to_cart_when_add_to_cart_buttons_are_clicked"
+    )
+
     # Arrange
     catalog_page = CatalogPage(selenium_driver)
     expected_count = 6
 
     # Act
-    for i in range(expected_count):
+    logger.info(f"Agregando {expected_count} productos al carrito")
+    for _ in range(expected_count):
         catalog_page.add_product_to_cart_by_index(0)
     item_count = catalog_page.get_cart_item_count()
+    logger.info(f"Productos agregados: {item_count}")
 
     # Assert
     assert item_count == expected_count
+    logger.info("Test completado exitosamente")
 
 
 @pytest.mark.ui
@@ -64,18 +72,25 @@ def test_cart_should_display_product_when_added_and_cart_icon_clicked(
     Test parametrizado que verifica que el carrito muestre el producto correcto
     cuando se agrega y se accede al carrito.
     """
+    logger.info(
+        f"Iniciando test_cart_should_display_product_when_added_and_cart_icon_clicked - Producto: {nombre_producto}"
+    )
+
     # Arrange
     catalog_page = CatalogPage(selenium_driver)
+    logger.info(f"Agregando producto al carrito: {nombre_producto}")
     catalog_page.add_product_to_cart_by_name(nombre_producto)
 
     # Act
     cart_page = catalog_page.go_to_cart()
     cart_items = cart_page.get_cart_items()
     item_names = cart_page.get_item_names()
+    logger.info(f"Productos en carrito: {item_names}")
 
     # Assert
     assert len(cart_items) == 1
     assert nombre_producto in item_names
+    logger.info(f"Test completado exitosamente - {nombre_producto}")
 
 
 @pytest.mark.ui
@@ -108,14 +123,22 @@ def test_cart_should_remove_product_when_remove_button_is_clicked(selenium_drive
     """
     Prueba que verifica que un producto se elimine del carrito al hacer clic en el botón "Remove".
     """
+    logger.info(
+        "Iniciando test_cart_should_remove_product_when_remove_button_is_clicked"
+    )
+
     # Arrange
     catalog_page = CatalogPage(selenium_driver)
     catalog_page.add_product_to_cart_by_index(0)
+    logger.info("Producto agregado al carrito")
     page = catalog_page.go_to_cart()
+    logger.info("Navegando al carrito")
 
     # Act
     page.click_remove_button_by_index(0)
+    logger.info("Producto removido del carrito")
     cart_items = page.get_cart_items()
 
     # Assert
     assert len(cart_items) == 0
+    logger.info("Test completado exitosamente")
