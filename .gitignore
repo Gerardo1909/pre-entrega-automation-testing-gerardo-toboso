@@ -43,7 +43,7 @@ uv.lock
 .pytest_cache/
 .mypy_cache/
 reports/
-screenshots/
+logs/
 
 ### VisualStudioCode ###
 .vscode/*

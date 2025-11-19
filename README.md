@@ -23,21 +23,30 @@ exclusivamente para llevar a cabos pruebas de esta índole.
 * **Python 3.13+**: Lenguaje de programación principal
 * **Selenium 4.35.0**: Automatización de navegador web
 * **Pytest 8.4.2**: Framework de testing
-* **Pytest-HTML 4.1.1**: Generación de reportes HTML para las pruebas
+* **Pytest-HTML 3.2.0**: Generación de reportes HTML para las pruebas
+* **Pytest-Check 2.6.0**: Soft assertions para mejor granularidad en los tests
+* **Pytest-Timeout 2.4.0**: Control de tiempo máximo de ejecución de tests
 
 ## Estructura del proyecto
 
 ```text
-pre-entrega-automation-testing-gerardo_toboso/
+pre-entrega-automation-testing-gerardo-toboso/
 ├── src/
-│   ├── tests/          # Casos de prueba automatizados
-│   ├── reports/        # Reportes generador a partir de las pruebas realizadas
-│   └── utils/          # Utilidades y funciones auxiliares
-├── .gitignore          # .git para ignorar archivos innecesarios
-├── .python-version     # Especifica la versión de Python con la que se trabaja
-├── requirements.txt    # Dependencias del proyecto
-├── pyproject.toml      # Configuración del proyecto
-└── README.md           # Este archivo
+│   ├── data/              # Datos de prueba (CSV, JSON)
+│   ├── logs/              # Archivos de log generados durante la ejecución
+│   ├── pages/             # Page Objects (patrón de diseño)
+│   ├── reports/           # Reportes HTML y screenshots de fallos
+│   ├── tests/             # Casos de prueba automatizados
+│   │   ├── conftest.py    # Configuración de fixtures y hooks de pytest
+│   │   ├── test_catalog.py
+│   │   ├── test_login.py
+│   │   └── test_shopping_cart.py
+│   └── utils/             # Utilidades (logger, readers, screenshot saver)
+├── .gitignore             # Archivos ignorados por git
+├── .python-version        # Versión de Python del proyecto
+├── pytest.ini             # Configuración de pytest (markers, opciones, etc.)
+├── pyproject.toml         # Configuración del proyecto y dependencias
+└── README.md              # Este archivo
 ```
 
 ## Instrucciones de instalación de dependencias
@@ -79,18 +88,11 @@ source .venv/bin/activate  # En Mac/Linux
 
 * **Ejecutar todas las pruebas**:
 
-  ```bash
-  pytest src/tests/
-  ```
-
-* **Ejecutar pruebas con reporte HTML**:
+  Ubicado en el directorio de raíz del proyecto únicamente hay que escribir el siguiente comando en la terminal:
 
   ```bash
-  pytest src/tests/ --html=src/reports/report.html --self-contained-html
+  pytest 
   ```
-
-* **Ejecutar pruebas en modo verbose**:
-
-  ```bash
-  pytest src/tests/ -v
-  ```
+  
+  Este comando ejecutará todas las pruebas y además generará logs que contienen detalles de la ejecución y un reporte 
+  de las pruebas ejecutadas en formato HTML.
