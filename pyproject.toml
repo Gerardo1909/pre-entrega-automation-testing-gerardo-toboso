@@ -5,6 +5,8 @@ description = "Pre-entrega de proyecto integrador para el curso QA automation."
 readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
+    "behave>=1.3.3",
+    "behave-html-formatter>=0.9.10",
     "pytest>=8.4.2",
     "pytest-check>=2.6.0",
     "pytest-html==3.2.0",

@@ -57,7 +57,7 @@ class CatalogPage:
         else:
             raise IndexError("Índice de producto fuera de rango.")
         return self
-    
+
     def add_product_to_cart_by_name(self, name: str):
         """
         Agrega un producto al carrito por su nombre.
@@ -121,6 +121,19 @@ class CatalogPage:
         from pages.shopping_cart_page import ShoppingCartPage
 
         return ShoppingCartPage(self.driver)
+
+    def get_product_names(self):
+        """
+        Obtiene los nombres de todos los productos en el catálogo.
+        """
+        name_elements = self.driver.find_elements(*self._ITEM_NAMES)
+        return [element.text for element in name_elements]
+
+    def get_add_to_cart_buttons(self):
+        """
+        Obtiene todos los botones 'Add to cart' del catálogo.
+        """
+        return self.driver.find_elements(*self._ADD_BUTTONS)
 
     def do_logout(self):
         """

@@ -22,31 +22,49 @@ exclusivamente para llevar a cabos pruebas de esta índole.
 
 * **Python 3.13+**: Lenguaje de programación principal
 * **Selenium 4.35.0**: Automatización de navegador web
-* **Pytest 8.4.2**: Framework de testing
+* **Pytest 8.4.2**: Framework de testing unitario y de integración
 * **Pytest-HTML 3.2.0**: Generación de reportes HTML para las pruebas
 * **Pytest-Check 2.6.0**: Soft assertions para mejor granularidad en los tests
 * **Pytest-Timeout 2.4.0**: Control de tiempo máximo de ejecución de tests
+* **Behave 1.3.3**: Framework BDD para pruebas con lenguaje Gherkin
+* **Behave-HTML-Formatter 0.9.10**: Generación de reportes HTML para Behave
 
 ## Estructura del proyecto
 
 ```text
 pre-entrega-automation-testing-gerardo-toboso/
 ├── src/
-│   ├── data/              # Datos de prueba (CSV, JSON)
-│   ├── logs/              # Archivos de log generados durante la ejecución
-│   ├── pages/             # Page Objects (patrón de diseño)
-│   ├── reports/           # Reportes HTML y screenshots de fallos
-│   ├── tests/             # Casos de prueba automatizados
-│   │   ├── conftest.py    # Configuración de fixtures y hooks de pytest
+│   ├── data/                    # Datos de prueba (CSV, JSON)
+│   ├── features/                # Archivos BDD con lenguaje Gherkin
+│   │   ├── steps/              # Definiciones de pasos de Behave
+│   │   │   ├── catalog_steps.py
+│   │   │   ├── login_steps.py
+│   │   │   └── shopping_cart_steps.py
+│   │   ├── catalog.feature
+│   │   ├── login.feature
+│   │   ├── shopping_cart.feature
+│   │   └── environment.py       # Hooks de Behave (before_all, after_step, etc.)
+│   ├── logs/                    # Archivos de log (pytest y behave)
+│   ├── pages/                   # Page Objects (patrón de diseño)
+│   ├── reports/                 # Reportes HTML, JSON y screenshots de fallos
+│   ├── tests/                   # Casos de prueba con pytest
+│   │   ├── conftest.py         # Configuración de fixtures y hooks de pytest
+│   │   ├── test_behave_runner.py  # Wrapper para ejecutar Behave desde pytest
 │   │   ├── test_catalog.py
 │   │   ├── test_login.py
 │   │   └── test_shopping_cart.py
-│   └── utils/             # Utilidades (logger, readers, screenshot saver)
-├── .gitignore             # Archivos ignorados por git
-├── .python-version        # Versión de Python del proyecto
-├── pytest.ini             # Configuración de pytest (markers, opciones, etc.)
-├── pyproject.toml         # Configuración del proyecto y dependencias
-└── README.md              # Este archivo
+│   └── utils/                   # Utilidades compartidas
+│       ├── logger.py           # Logger para pruebas pytest y behave
+│       ├── csv_reader.py
+│       ├── json_reader.py
+│       └── screenshot_saver.py
+├── .gitignore                   # Archivos ignorados por git
+├── .python-version              # Versión de Python del proyecto
+├── behave.ini                   # Configuración de Behave
+├── pytest.ini                   # Configuración de pytest (markers, opciones, etc.)
+├── pyproject.toml               # Configuración del proyecto y dependencias
+├── requirements.txt             # Lista de dependencias del proyecto
+└── README.md                    # Este archivo
 ```
 
 ## Instrucciones de instalación de dependencias
@@ -86,13 +104,31 @@ source .venv/bin/activate  # En Mac/Linux
 
 > Asegúrate de tener activado el entorno virtual que creaste anteriormente
 
-* **Ejecutar todas las pruebas**:
+### Ejecutar todas las pruebas (Pytest + Behave)
 
-  Ubicado en el directorio de raíz del proyecto únicamente hay que escribir el siguiente comando en la terminal:
+Ubicado en el directorio de raíz del proyecto, ejecuta:
 
-  ```bash
-  pytest 
-  ```
-  
-  Este comando ejecutará todas las pruebas y además generará logs que contienen detalles de la ejecución y un reporte 
-  de las pruebas ejecutadas en formato HTML.
+```bash
+pytest
+```
+
+Este comando ejecutará:
+- Todas las pruebas escritas en Pytest
+- Las pruebas BDD escritas en Gherkin a través del wrapper `test_behave_runner.py`
+- Generará logs detallados en `src/logs/` (test.log para Pytest, behave_test.log para Behave)
+- Creará un reporte HTML de Pytest en `src/reports/report.html`
+- Creará un reporte HTML de Behave en `src/reports/behave_full.html`
+- Creará un reporte JSON de Behave en `src/reports/behave_full.json`
+- Guardará screenshots de fallos en `src/reports/screenshots/`
+
+### Ejecutar solo pruebas pytest (sin Behave)
+
+```bash
+pytest -m "not behave"
+```
+
+### Ejecutar solo pruebas Behave directamente
+
+```bash
+behave
+```
