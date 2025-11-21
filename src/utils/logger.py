@@ -11,7 +11,7 @@ LOG_DIR = os.path.join(os.path.dirname(__file__), "..", "logs")
 os.makedirs(LOG_DIR, exist_ok=True)
 
 
-def get_logger(name="tests_logger"):
+def get_logger(name="tests_logger", filename="test.log"):
     """
     Obtiene un logger configurado con handlers de consola y archivo.
 
@@ -36,7 +36,7 @@ def get_logger(name="tests_logger"):
 
     # Handler para archivo con rotación
     file_handler = RotatingFileHandler(
-        os.path.join(LOG_DIR, "test.log"),
+        os.path.join(LOG_DIR, filename),
         maxBytes=1024 * 1024,  # 1MB por archivo
         backupCount=5,  # Mantener 5 archivos históricos
         encoding="utf-8"  # Codificación UTF-8 para caracteres especiales
@@ -49,5 +49,6 @@ def get_logger(name="tests_logger"):
     return logger
 
 
-# Logger por defecto
+# Loggers
 logger = get_logger()
+behave_logger = get_logger(name="behave_logger", filename="behave.log")
