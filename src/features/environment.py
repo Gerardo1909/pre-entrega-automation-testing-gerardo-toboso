@@ -31,6 +31,10 @@ def before_all(context):
     context.chrome_options.add_argument("--headless")
     context.chrome_options.add_argument("--no-sandbox")
     context.chrome_options.add_argument("--disable-dev-shm-usage")
+    context.chrome_options.add_argument("--disable-gpu")
+    context.chrome_options.add_argument("--window-size=1920,1080")
+    context.chrome_options.add_argument("--disable-extensions")
+    context.chrome_options.add_argument("--disable-software-rasterizer")
 
     # Crear directorio para screenshots si no existe
     screenshots_dir = (
@@ -51,7 +55,10 @@ def before_scenario(context, scenario):
 
     # Crear un nuevo driver para cada escenario
     context.driver = webdriver.Chrome(options=context.chrome_options)
-    context.driver.implicitly_wait(10)
+    # Aumentar timeouts para entornos CI
+    context.driver.implicitly_wait(20)
+    context.driver.set_page_load_timeout(30)
+    context.driver.set_script_timeout(30)
     behave_logger.debug("Driver de Chrome creado para este escenario")
 
 

@@ -33,12 +33,27 @@ jobs:
       - name: Install ChromeDriver
         uses: nanasess/setup-chromedriver@v2
       
-      - name: Run Pytest tests
-        run: pytest src/tests/ -v --html=src/reports/pytest_report.html --self-contained-html
+      - name: Set environment variables
+        run: |
+          echo "SELENIUM_IMPLICIT_WAIT=20" >> $GITHUB_ENV
+          echo "SELENIUM_PAGE_LOAD_TIMEOUT=30" >> $GITHUB_ENV
+      
+      - name: Run Pytest smoke tests
+        run: pytest src/tests/ -m smoke -v --tb=short
+        timeout-minutes: 15
+      
+      - name: Run Pytest all tests
+        run: pytest src/tests/ -v --html=src/reports/pytest_report.html --self-contained-html --tb=short
+        timeout-minutes: 30
         continue-on-error: true
       
-      - name: Run Behave tests
-        run: behave src/features/ -f html -o src/reports/behave_report.html
+      - name: Run Behave smoke tests
+        run: behave src/features/ --tags=smoke --no-capture
+        timeout-minutes: 15
+      
+      - name: Run Behave all tests
+        run: behave src/features/ -f html -o src/reports/behave_report.html --no-capture
+        timeout-minutes: 30
         continue-on-error: true
       
       - name: Upload test reports
