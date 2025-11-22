@@ -7,6 +7,7 @@ import os
 import sys
 import shutil
 from pathlib import Path
+import re
 
 # Agregar el directorio src al path para importar módulos
 sys.path.insert(0, str(Path(__file__).parent.parent))
@@ -65,8 +66,11 @@ def after_step(context, step):
         behave_logger.error(f"Error: {step.exception}")
 
         # Guardar screenshot del fallo
-        scenario_name = context.scenario.name
-        step_name = f"{step.keyword}_{step.name}".replace(" ", "_")
+        # Sanitizar nombres de archivos removiendo caracteres inválidos para pipeline CI
+        scenario_name = re.sub(r'[<>:"/\\|?*\r\n]', "_", context.scenario.name)
+        step_name = re.sub(
+            r'[<>:"/\\|?*\r\n]', "_", f"{step.keyword}_{step.name}"
+        ).replace(" ", "_")
         screenshot_name = f"failure_{scenario_name}_{step_name}"
 
         try:
@@ -83,7 +87,6 @@ def after_step(context, step):
 
         except Exception as e:
             behave_logger.error(f"No se pudo guardar el screenshot: {e}")
-
     elif step.status == "passed":
         behave_logger.debug(f"Paso exitoso: {step.keyword} {step.name}")
     elif step.status == "skipped":

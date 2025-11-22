@@ -2,6 +2,9 @@
 
 **Realizado por: Gerardo Toboso**
 
+![CI
+Status](https://github.com/Gerardo1909/pre-entrega-automation-testing-gerardo-toboso/actions/workflows/ci.yml/badge.svg)
+
 ## Propósito
 
 El propósito de esta pre-entrega de proyecto es aplicar los conocimientos adquiridos sobre la **automatización de pruebas de software** 

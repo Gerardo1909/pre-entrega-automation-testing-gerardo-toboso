@@ -49,6 +49,14 @@ jobs:
           path: src/reports/
           retention-days: 30
       
+      - name: Upload test logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-logs
+          path: src/logs/
+          retention-days: 30
+      
       - name: Upload screenshots on failure
         if: failure()
         uses: actions/upload-artifact@v4
