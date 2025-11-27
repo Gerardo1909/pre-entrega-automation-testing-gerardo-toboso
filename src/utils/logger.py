@@ -53,3 +53,4 @@ def get_logger(name="tests_logger", filename="test.log"):
 ui_logger = get_logger(name="ui_logger", filename="ui.log")
 behave_logger = get_logger(name="behave_logger", filename="behave.log")
 api_logger = get_logger(name="api_logger", filename="api.log")
+e2e_logger = get_logger(name="e2e_logger", filename="e2e.log")
