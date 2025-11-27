@@ -50,5 +50,6 @@ def get_logger(name="tests_logger", filename="test.log"):
 
 
 # Loggers
-logger = get_logger()
+ui_logger = get_logger(name="ui_logger", filename="ui.log")
 behave_logger = get_logger(name="behave_logger", filename="behave.log")
+api_logger = get_logger(name="api_logger", filename="api.log")
