@@ -8,7 +8,7 @@ Status](https://github.com/Gerardo1909/pre-entrega-automation-testing-gerardo-to
 ## Propósito
 
 El propósito de esta pre-entrega de proyecto es aplicar los conocimientos adquiridos sobre la **automatización de pruebas de software** 
-haciendo uso de **Python** como lenguaje de programación principal y librerías pertinentes para este contexto como lo son **Pytest y Selenium**. Los puntos que se ponen en práctica más precisamente son:
+haciendo uso de **Python** como lenguaje de programación principal y librerías pertinentes para este contexto como lo son **Pytest, Selenium y Requests**. Los puntos que se ponen en práctica más precisamente son:
 
 * Automatización de flujos básicos de navegación web utilizando **Selenium WebDriver**.
 
@@ -18,13 +18,20 @@ haciendo uso de **Python** como lenguaje de programación principal y librerías
 
 * Construir un conjunto de pruebas extenso que abarque las funcionalidades más importantes de la página.
 
+* Automatización de pruebas de **API REST** utilizando **Requests**.
+
+* Validación de respuestas HTTP incluyendo status codes, headers, estructura de datos y performance.
+
+* Implementación de pruebas E2E para el ciclo de vida completo de recursos (CRUD).
+
 En este caso la página que se estará utilizando será [saucedemo.com](https://www.saucedemo.com/), la cual está diseñada
-exclusivamente para llevar a cabos pruebas de esta índole.
+exclusivamente para llevar a cabo pruebas de UI, y la API pública [JSONPlaceholder](https://jsonplaceholder.typicode.com/) para pruebas de API.
 
 ## Tecnologías usadas
 
 * **Python 3.13+**: Lenguaje de programación principal
 * **Selenium 4.35.0**: Automatización de navegador web
+* **Requests 2.32.5**: Cliente HTTP para pruebas de API REST
 * **Pytest 8.4.2**: Framework de testing unitario y de integración
 * **Pytest-HTML 3.2.0**: Generación de reportes HTML para las pruebas
 * **Pytest-Check 2.6.0**: Soft assertions para mejor granularidad en los tests
@@ -55,8 +62,11 @@ pre-entrega-automation-testing-gerardo-toboso/
 │   │   ├── test_behave_runner.py  # Wrapper para ejecutar Behave desde pytest
 │   │   ├── test_catalog.py
 │   │   ├── test_login.py
-│   │   └── test_shopping_cart.py
+│   │   ├── test_shopping_cart.py
+│   │   ├── test_json_placeholder.py  # Pruebas de API individuales (GET, POST, PUT, PATCH, DELETE)
+│   │   └── test_post_lifecycle.py    # Pruebas E2E del ciclo de vida completo de un post (CRUD)
 │   └── utils/                   # Utilidades compartidas
+│       ├── api_utils.py        # Función helper para validación de respuestas API
 │       ├── logger.py           # Logger para pruebas pytest y behave
 │       ├── csv_reader.py
 │       ├── json_reader.py
